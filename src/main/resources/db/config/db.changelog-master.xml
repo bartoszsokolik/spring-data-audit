@@ -1,0 +1,126 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
+    http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+    
+    <changeSet id="001_create_table" author="bsokolik">
+        <createTable tableName="movies">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="title" type="VARCHAR(255)"/>
+            <column name="uuid" type="VARCHAR(255)"/>
+            <column name="created_by" type="VARCHAR(255)"/>
+            <column name="created_date" type="TIMESTAMP"/>
+            <column name="last_modified_by" type="VARCHAR(255)"/>
+            <column name="last_modified_date" type="TIMESTAMP"/>
+        </createTable>
+
+        <createTable tableName="movies_aud">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="title" type="VARCHAR(255)"/>
+            <column name="uuid" type="VARCHAR(255)"/>
+            <column name="created_by" type="VARCHAR(255)"/>
+            <column name="created_date" type="TIMESTAMP"/>
+            <column name="last_modified_by" type="VARCHAR(255)"/>
+            <column name="last_modified_date" type="TIMESTAMP"/>
+            <column name="rev" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="revtype" type="TINYINT"/>
+        </createTable>
+
+        <addPrimaryKey tableName="movies_aud" columnNames="id, rev"/>
+
+        <createTable tableName="actors">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="first_name" type="VARCHAR(255)"/>
+            <column name="last_name" type="VARCHAR(255)"/>
+            <column name="uuid" type="VARCHAR(255)"/>
+            <column name="created_by" type="VARCHAR(255)"/>
+            <column name="created_date" type="TIMESTAMP"/>
+            <column name="last_modified_by" type="VARCHAR(255)"/>
+            <column name="last_modified_date" type="TIMESTAMP"/>
+        </createTable>
+
+        <createTable tableName="actors_aud">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="first_name" type="VARCHAR(255)"/>
+            <column name="last_name" type="VARCHAR(255)"/>
+            <column name="uuid" type="VARCHAR(255)"/>
+            <column name="created_by" type="VARCHAR(255)"/>
+            <column name="created_date" type="TIMESTAMP"/>
+            <column name="last_modified_by" type="VARCHAR(255)"/>
+            <column name="last_modified_date" type="TIMESTAMP"/>
+            <column name="rev" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="revtype" type="TINYINT"/>
+        </createTable>
+
+        <addPrimaryKey tableName="actors_aud" columnNames="id, rev"/>
+
+        <createTable tableName="movies_actors">
+            <column name="movie_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="actor_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addPrimaryKey tableName="movies_actors" columnNames="movie_id, actor_id"/>
+
+        <addForeignKeyConstraint baseTableName="movies_actors" baseColumnNames="movie_id"
+                                 constraintName="fk1_movies_actors" referencedTableName="movies"
+                                 referencedColumnNames="id"/>
+
+        <addForeignKeyConstraint baseTableName="movies_actors" baseColumnNames="actor_id"
+                                 constraintName="fk2_movies_actors" referencedTableName="actors"
+                                 referencedColumnNames="id"/>
+
+        <createTable tableName="revinfo">
+            <column name="rev" type="INTEGER" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="revtstmp" type="BIGINT"/>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="movies_aud" baseColumnNames="rev"
+                                 constraintName="fk_movies_aud_revinfo" referencedTableName="revinfo"
+                                 referencedColumnNames="rev"/>
+
+        <addForeignKeyConstraint baseTableName="actors_aud" baseColumnNames="rev"
+                                 constraintName="fk_actors_aud_revinfo" referencedTableName="revinfo"
+                                 referencedColumnNames="rev"/>
+        
+        <createTable tableName="movies_actors_aud">
+            <column name="rev" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="movie_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="actor_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="revtype" type="TINYINT"/>
+        </createTable>
+
+        <addPrimaryKey tableName="movies_actors_aud" columnNames="rev, movie_id, actor_id"/>
+
+        <addForeignKeyConstraint baseTableName="movies_actors_aud" baseColumnNames="rev"
+                                 constraintName="fk_movies_actors_aud_revinfo" referencedTableName="revinfo"
+                                 referencedColumnNames="rev"/>
+
+    </changeSet>
+    
+</databaseChangeLog>
