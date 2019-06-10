@@ -1,0 +1,9 @@
+spring:
+  liquibase:
+    change-log: classpath:db/config/db.changelog-master.xml
+  h2:
+    console:
+      enabled: true
+  jpa:
+    hibernate:
+      ddl-auto: validate
