@@ -1,15 +1,11 @@
-package pl.solutions.software.sokolik.bartosz.actor;
+package pl.solutions.software.sokolik.bartosz.actor.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.envers.AuditJoinTable;
 import org.hibernate.envers.AuditTable;
 import org.hibernate.envers.Audited;
-import org.hibernate.envers.NotAudited;
 import pl.solutions.software.sokolik.bartosz.domain.AuditedEntity;
-import pl.solutions.software.sokolik.bartosz.movie.Movie;
+import pl.solutions.software.sokolik.bartosz.movie.domain.Movie;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -24,6 +20,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
+@EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
 @Audited
 @AuditTable("actors_aud")
 public class Actor extends AuditedEntity {

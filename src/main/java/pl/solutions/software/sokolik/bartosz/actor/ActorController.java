@@ -1,11 +1,13 @@
 package pl.solutions.software.sokolik.bartosz.actor;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import pl.solutions.software.sokolik.bartosz.actor.dto.ActorDto;
-import pl.solutions.software.sokolik.bartosz.actor.dto.ActorListDto;
+import pl.solutions.software.sokolik.bartosz.actor.domain.ActorFacade;
+import pl.solutions.software.sokolik.bartosz.actor.domain.dto.ActorDto;
+import pl.solutions.software.sokolik.bartosz.actor.domain.dto.ActorListDto;
 
 import java.net.URI;
 
@@ -18,7 +20,7 @@ class ActorController {
 
     @GetMapping
     ResponseEntity<ActorListDto> findAllActors() {
-
+        return new ResponseEntity<>(actorFacade.findAllActorsWithMovies(), HttpStatus.OK);
     }
 
     @PostMapping

@@ -5,8 +5,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import pl.solutions.software.sokolik.bartosz.movie.dto.AssignMovieRequest;
-import pl.solutions.software.sokolik.bartosz.movie.dto.MovieDto;
+import pl.solutions.software.sokolik.bartosz.movie.domain.MovieFacade;
+import pl.solutions.software.sokolik.bartosz.movie.domain.dto.AddCategoryRequest;
+import pl.solutions.software.sokolik.bartosz.movie.domain.dto.AssignMovieRequest;
+import pl.solutions.software.sokolik.bartosz.movie.domain.dto.MovieDto;
+import pl.solutions.software.sokolik.bartosz.movie.domain.dto.MovieListDto;
 
 import java.net.URI;
 
@@ -20,6 +23,11 @@ class MovieController {
     @GetMapping("/{id}")
     ResponseEntity<MovieDto> findOne(@PathVariable Long id) {
         return new ResponseEntity<>(movieFacade.findById(id), HttpStatus.OK);
+    }
+
+    @GetMapping
+    ResponseEntity<MovieListDto> findAll() {
+        return new ResponseEntity<>(movieFacade.findAll(), HttpStatus.OK);
     }
 
     @PostMapping
@@ -45,5 +53,10 @@ class MovieController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @PutMapping("/category")
+    ResponseEntity<Void> addCategoryToMovie(@RequestBody AddCategoryRequest dto) {
+        movieFacade.addCategoryToMovie(dto);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
 }

@@ -1,13 +1,12 @@
-package pl.solutions.software.sokolik.bartosz.movie;
+package pl.solutions.software.sokolik.bartosz.movie.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.envers.AuditJoinTable;
 import org.hibernate.envers.AuditTable;
 import org.hibernate.envers.Audited;
-import pl.solutions.software.sokolik.bartosz.actor.Actor;
+import org.hibernate.envers.NotAudited;
+import pl.solutions.software.sokolik.bartosz.actor.domain.Actor;
+import pl.solutions.software.sokolik.bartosz.category.domain.Category;
 import pl.solutions.software.sokolik.bartosz.domain.AuditedEntity;
 
 import javax.persistence.*;
@@ -22,6 +21,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
+@EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
 public class Movie extends AuditedEntity {
 
     @Column(name = "title")
@@ -33,8 +33,14 @@ public class Movie extends AuditedEntity {
             inverseJoinColumns = @JoinColumn(name = "actor_id", referencedColumnName = "id"))
     private Set<Actor> actors = new HashSet<>();
 
+    @ManyToMany
+    @NotAudited
+    @JoinTable(name = "movies_categories", joinColumns = @JoinColumn(name = "movie_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "category_id", referencedColumnName = "id"))
+    private Set<Category> categories = new HashSet<>();
+
     @Builder
-    public Movie(Long id,String createdBy, LocalDateTime createdDate, String lastModifiedBy, LocalDateTime lastModifiedDate, String title) {
+    public Movie(Long id, String createdBy, LocalDateTime createdDate, String lastModifiedBy, LocalDateTime lastModifiedDate, String title) {
         super(id, createdBy, createdDate, lastModifiedBy, lastModifiedDate);
         this.title = title;
     }

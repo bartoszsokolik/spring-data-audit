@@ -1,4 +1,4 @@
-package pl.solutions.software.sokolik.bartosz.movie;
+package pl.solutions.software.sokolik.bartosz.movie.domain;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -6,8 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.test.context.junit4.SpringRunner;
-import pl.solutions.software.sokolik.bartosz.movie.Movie;
-import pl.solutions.software.sokolik.bartosz.movie.MovieRepository;
+import pl.solutions.software.sokolik.bartosz.movie.domain.Movie;
+import pl.solutions.software.sokolik.bartosz.movie.domain.MovieRepository;
 
 import java.util.List;
 

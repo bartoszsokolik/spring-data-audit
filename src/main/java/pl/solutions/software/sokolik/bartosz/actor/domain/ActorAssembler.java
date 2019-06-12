@@ -1,8 +1,8 @@
-package pl.solutions.software.sokolik.bartosz.actor;
+package pl.solutions.software.sokolik.bartosz.actor.domain;
 
 import org.springframework.stereotype.Component;
-import pl.solutions.software.sokolik.bartosz.actor.dto.ActorDto;
-import pl.solutions.software.sokolik.bartosz.movie.dto.MovieDto;
+import pl.solutions.software.sokolik.bartosz.actor.domain.dto.ActorDto;
+import pl.solutions.software.sokolik.bartosz.movie.domain.dto.MovieDto;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,6 +17,7 @@ class ActorAssembler {
                 .collect(Collectors.toList());
 
         return ActorDto.builder()
+                .id(actor.getId())
                 .firstName(actor.getFirstName())
                 .lastName(actor.getLastName())
                 .movies(movies)

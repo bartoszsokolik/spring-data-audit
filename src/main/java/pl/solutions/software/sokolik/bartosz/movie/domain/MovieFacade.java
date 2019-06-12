@@ -1,12 +1,12 @@
-package pl.solutions.software.sokolik.bartosz.movie;
+package pl.solutions.software.sokolik.bartosz.movie.domain;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pl.solutions.software.sokolik.bartosz.actor.ActorFacade;
-import pl.solutions.software.sokolik.bartosz.movie.dto.AssignMovieRequest;
-import pl.solutions.software.sokolik.bartosz.movie.dto.MovieDto;
-import pl.solutions.software.sokolik.bartosz.movie.dto.MovieNotFoundException;
+import pl.solutions.software.sokolik.bartosz.actor.domain.ActorFacade;
+import pl.solutions.software.sokolik.bartosz.category.domain.Category;
+import pl.solutions.software.sokolik.bartosz.category.domain.CategoryFacade;
+import pl.solutions.software.sokolik.bartosz.movie.domain.dto.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,17 +17,22 @@ public class MovieFacade {
 
     private final MovieRepository movieRepository;
     private final MovieAssembler movieAssembler;
+    private final CategoryFacade categoryFacade;
     private final ActorFacade actorFacade;
 
+    @Transactional
+    public MovieListDto findAll() {
+        List<MovieDto> movies = movieRepository.findAll()
+                .stream()
+                .map(movieAssembler::fromDomain)
+                .collect(Collectors.toList());
+        return new MovieListDto(movies);
+    }
+
+    @Transactional
     public MovieDto findById(Long id) {
         Movie movie = movieRepository.findById(id).orElseThrow(RuntimeException::new);
         return movieAssembler.fromDomain(movie);
-    }
-
-    public List<MovieDto> findAllByActorId(Long actorId) {
-        return movieRepository.findAllByActorId(actorId).stream()
-                .map(movieAssembler::fromDomain)
-                .collect(Collectors.toList());
     }
 
     @Transactional
@@ -46,6 +51,13 @@ public class MovieFacade {
     public void assignActorsToMovie(Long movieId, AssignMovieRequest dto) {
         Movie movie = fetchMovieById(movieId);
         movie.getActors().addAll(actorFacade.findActorsById(dto.getActors()));
+    }
+
+    @Transactional
+    public void addCategoryToMovie(AddCategoryRequest dto) {
+        Category category = categoryFacade.findCategoryByName(dto.getCategoryName());
+        Movie movie = fetchMovieById(dto.getMovieId());
+        movie.getCategories().add(category);
     }
 
     public Movie fetchMovieById(Long id) {

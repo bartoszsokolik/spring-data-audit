@@ -1,9 +1,6 @@
 package pl.solutions.software.sokolik.bartosz.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.envers.Audited;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
@@ -22,6 +19,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @Builder(builderMethodName = "auditedEntityBuilder")
 @Audited
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class AuditedEntity extends BaseEntity {
 
     @CreatedBy
@@ -40,6 +38,7 @@ public class AuditedEntity extends BaseEntity {
     @Column(name = "last_modified_date")
     private LocalDateTime lastModifiedDate;
 
+    @EqualsAndHashCode.Include
     private String uuid = UUID.randomUUID().toString();
 
     public AuditedEntity(Long id, String createdBy, LocalDateTime createdDate, String lastModifiedBy, LocalDateTime lastModifiedDate) {

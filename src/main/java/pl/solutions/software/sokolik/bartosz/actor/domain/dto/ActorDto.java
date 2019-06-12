@@ -1,10 +1,11 @@
-package pl.solutions.software.sokolik.bartosz.actor.dto;
+package pl.solutions.software.sokolik.bartosz.actor.domain.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import pl.solutions.software.sokolik.bartosz.movie.dto.MovieDto;
+import pl.solutions.software.sokolik.bartosz.infrastracture.AbstractDto;
+import pl.solutions.software.sokolik.bartosz.movie.domain.dto.MovieDto;
 
 import java.util.List;
 
@@ -12,7 +13,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ActorDto {
+public class ActorDto implements AbstractDto {
 
     private Long id;
 

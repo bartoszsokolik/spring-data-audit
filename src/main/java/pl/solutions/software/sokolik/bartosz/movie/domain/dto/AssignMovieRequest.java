@@ -1,4 +1,4 @@
-package pl.solutions.software.sokolik.bartosz.movie.dto;
+package pl.solutions.software.sokolik.bartosz.movie.domain.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
