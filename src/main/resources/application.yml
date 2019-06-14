@@ -1,9 +1,14 @@
 spring:
   liquibase:
     change-log: classpath:db/config/db.changelog-master.xml
-  h2:
-    console:
-      enabled: true
+  datasource:
+    username: filmuser
+    password: filmuser
   jpa:
     hibernate:
       ddl-auto: validate
+    properties:
+      hibernate:
+        jdbc:
+          lob:
+            non_contextual_creation: true

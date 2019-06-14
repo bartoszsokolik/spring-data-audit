@@ -22,7 +22,12 @@ import java.util.Set;
 @AllArgsConstructor
 @Data
 @EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
+@SequenceGenerator(name = "movie_seq_gen", sequenceName = "movie_id_seq", allocationSize = 1, initialValue = 100)
 public class Movie extends AuditedEntity {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "movie_seq_gen")
+    private Long id;
 
     @Column(name = "title")
     private String title;
@@ -40,9 +45,12 @@ public class Movie extends AuditedEntity {
     private Set<Category> categories = new HashSet<>();
 
     @Builder
-    public Movie(Long id, String createdBy, LocalDateTime createdDate, String lastModifiedBy, LocalDateTime lastModifiedDate, String title) {
-        super(id, createdBy, createdDate, lastModifiedBy, lastModifiedDate);
+    public Movie(Long id, String createdBy, LocalDateTime createdDate, String lastModifiedBy,
+                 LocalDateTime lastModifiedDate, String title, Set<Category> categories) {
+        super(createdBy, createdDate, lastModifiedBy, lastModifiedDate);
+        this.id = id;
         this.title = title;
+        this.categories = categories;
     }
 
     public Movie(String title) {

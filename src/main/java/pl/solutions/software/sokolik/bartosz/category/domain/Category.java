@@ -7,10 +7,7 @@ import org.hibernate.envers.NotAudited;
 import pl.solutions.software.sokolik.bartosz.domain.AuditedEntity;
 import pl.solutions.software.sokolik.bartosz.movie.domain.Movie;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -23,7 +20,12 @@ import java.util.Set;
 @EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
 @AllArgsConstructor
 @NoArgsConstructor
+@SequenceGenerator(name = "category_seq_gen", sequenceName = "category_id_seq", allocationSize = 1, initialValue = 100)
 public class Category extends AuditedEntity {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "category_seq_gen")
+    private Long id;
 
     @Column(name = "name")
     private String name;

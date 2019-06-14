@@ -6,6 +6,11 @@
     http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
 
     <changeSet id="001_create_table" author="bsokolik">
+        <createSequence sequenceName="movie_id_seq" startValue="100" incrementBy="1"/>
+        <createSequence sequenceName="category_id_seq" startValue="100" incrementBy="1"/>
+        <createSequence sequenceName="actor_id_seq" startValue="100" incrementBy="1"/>
+        <createSequence sequenceName="revinfo_id_seq" startValue="100" incrementBy="1"/>
+
         <createTable tableName="movies">
             <column name="id" type="BIGINT" autoIncrement="true">
                 <constraints nullable="false" primaryKey="true"/>
@@ -28,7 +33,7 @@
             <column name="created_date" type="TIMESTAMP"/>
             <column name="last_modified_by" type="VARCHAR(255)"/>
             <column name="last_modified_date" type="TIMESTAMP"/>
-            <column name="rev" type="INTEGER">
+            <column name="rev" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
             <column name="revtype" type="TINYINT"/>
@@ -60,7 +65,7 @@
             <column name="created_date" type="TIMESTAMP"/>
             <column name="last_modified_by" type="VARCHAR(255)"/>
             <column name="last_modified_date" type="TIMESTAMP"/>
-            <column name="rev" type="INTEGER">
+            <column name="rev" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
             <column name="revtype" type="TINYINT"/>
@@ -88,7 +93,7 @@
                                  referencedColumnNames="id"/>
 
         <createTable tableName="revinfo">
-            <column name="rev" type="INTEGER" autoIncrement="true">
+            <column name="rev" type="BIGINT" autoIncrement="true">
                 <constraints primaryKey="true"/>
             </column>
             <column name="revtstmp" type="BIGINT"/>
@@ -103,7 +108,7 @@
                                  referencedColumnNames="rev"/>
 
         <createTable tableName="movies_actors_aud">
-            <column name="rev" type="INTEGER">
+            <column name="rev" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
             <column name="movie_id" type="BIGINT">
@@ -166,7 +171,7 @@
             <column name="created_date" type="TIMESTAMP"/>
             <column name="last_modified_by" type="VARCHAR(255)"/>
             <column name="last_modified_date" type="TIMESTAMP"/>
-            <column name="rev" type="INTEGER">
+            <column name="rev" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
             <column name="revtype" type="TINYINT"/>

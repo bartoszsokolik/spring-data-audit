@@ -20,7 +20,7 @@ import java.util.UUID;
 @Builder(builderMethodName = "auditedEntityBuilder")
 @Audited
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class AuditedEntity extends BaseEntity {
+public class AuditedEntity {
 
     @CreatedBy
     @Column(name = "created_by")
@@ -41,8 +41,7 @@ public class AuditedEntity extends BaseEntity {
     @EqualsAndHashCode.Include
     private String uuid = UUID.randomUUID().toString();
 
-    public AuditedEntity(Long id, String createdBy, LocalDateTime createdDate, String lastModifiedBy, LocalDateTime lastModifiedDate) {
-        super(id);
+    public AuditedEntity(String createdBy, LocalDateTime createdDate, String lastModifiedBy, LocalDateTime lastModifiedDate) {
         this.createdBy = createdBy;
         this.createdDate = createdDate;
         this.lastModifiedBy = lastModifiedBy;

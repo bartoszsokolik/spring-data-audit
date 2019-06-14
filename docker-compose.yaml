@@ -1,0 +1,23 @@
+version: '3.7'
+
+services:
+  postgres:
+    image: 'postgres'
+    ports:
+      - '5432:5432'
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - './init.sql:/docker-entrypoint-initdb.d/init.sql'
+
+  web:
+    build:
+      context: ./
+    ports:
+      - '8080:8080'
+    depends_on:
+      - postgres
+    environment:
+      APP_OPTS: --spring.datasource.url=jdbc:postgresql://postgres:5432/filmstore?currentSchema=filmstore
+    entrypoint: './wait-for-it.sh -t 10 postgres:5432 -- /run.sh'

@@ -1,5 +1,6 @@
 package pl.solutions.software.sokolik.bartosz.movie.domain;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,8 +10,6 @@ import org.springframework.data.domain.AuditorAware;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import pl.solutions.software.sokolik.bartosz.config.TestAuditingConfiguration;
-import pl.solutions.software.sokolik.bartosz.movie.domain.Movie;
-import pl.solutions.software.sokolik.bartosz.movie.domain.MovieRepository;
 
 import java.util.List;
 
@@ -21,6 +20,7 @@ import static pl.solutions.software.sokolik.bartosz.configuration.AuditingConsta
 @DataJpaTest
 @ActiveProfiles("test")
 @Import(TestAuditingConfiguration.class)
+@Ignore
 public class AuditingApplicationTests {
 
     @Autowired

@@ -7,10 +7,7 @@ import org.hibernate.envers.Audited;
 import pl.solutions.software.sokolik.bartosz.domain.AuditedEntity;
 import pl.solutions.software.sokolik.bartosz.movie.domain.Movie;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -23,7 +20,12 @@ import java.util.Set;
 @EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
 @Audited
 @AuditTable("actors_aud")
+@SequenceGenerator(name = "actor_seq_gen", sequenceName = "actor_id_seq", allocationSize = 1, initialValue = 100)
 public class Actor extends AuditedEntity {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "actor_seq_gen")
+    private Long id;
 
     @Column(name = "first_name")
     private String firstName;
@@ -36,9 +38,12 @@ public class Actor extends AuditedEntity {
     private Set<Movie> movies = new HashSet<>();
 
     @Builder
-    public Actor(Long id, String createdBy, LocalDateTime createdDate, String lastModifiedBy, LocalDateTime lastModifiedDate, String firstName, String lastName) {
-        super(id, createdBy, createdDate, lastModifiedBy, lastModifiedDate);
+    public Actor(Long id, String createdBy, LocalDateTime createdDate, String lastModifiedBy,
+                 LocalDateTime lastModifiedDate, String firstName, String lastName, Set<Movie> movies) {
+        super(createdBy, createdDate, lastModifiedBy, lastModifiedDate);
+        this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
+        this.movies = movies;
     }
 }
