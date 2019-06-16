@@ -20,10 +20,10 @@ import java.util.Set;
 @EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
 @AllArgsConstructor
 @NoArgsConstructor
-@SequenceGenerator(name = "category_seq_gen", sequenceName = "category_id_seq", allocationSize = 1, initialValue = 100)
 public class Category extends AuditedEntity {
 
     @Id
+    @SequenceGenerator(name = "category_seq_gen", sequenceName = "category_id_seq", allocationSize = 1, initialValue = 100)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "category_seq_gen")
     private Long id;
 

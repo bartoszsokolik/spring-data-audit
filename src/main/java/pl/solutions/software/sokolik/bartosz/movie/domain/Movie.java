@@ -22,10 +22,10 @@ import java.util.Set;
 @AllArgsConstructor
 @Data
 @EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
-@SequenceGenerator(name = "movie_seq_gen", sequenceName = "movie_id_seq", allocationSize = 1, initialValue = 100)
 public class Movie extends AuditedEntity {
 
     @Id
+    @SequenceGenerator(name = "movie_seq_gen", sequenceName = "movie_id_seq", allocationSize = 1, initialValue = 100)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "movie_seq_gen")
     private Long id;
 

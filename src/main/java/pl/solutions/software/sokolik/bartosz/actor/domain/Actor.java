@@ -20,10 +20,10 @@ import java.util.Set;
 @EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
 @Audited
 @AuditTable("actors_aud")
-@SequenceGenerator(name = "actor_seq_gen", sequenceName = "actor_id_seq", allocationSize = 1, initialValue = 100)
 public class Actor extends AuditedEntity {
 
     @Id
+    @SequenceGenerator(name = "actor_seq_gen", sequenceName = "actor_id_seq", allocationSize = 1, initialValue = 100)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "actor_seq_gen")
     private Long id;
 

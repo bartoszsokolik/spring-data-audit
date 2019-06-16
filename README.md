@@ -16,12 +16,12 @@ curl -v -X POST http://localhost:8080/api/actors -H "Content-type: application/j
 ```
 
 ```
-curl -v -X POST -H "Content-type: application/json"  http://localhost:8080/categories -d '{"name" : "science-fiction"}'
+curl -v -X POST -H "Content-type: application/json"  http://localhost:8080/api/categories -d '{"name" : "science-fiction"}'
 ```
 
 To assign actor to movie curl
 ```
-curl -v -X PUT http://localhost:8080/api/movies/1/actors -H "Content-type: application/json" -d '{"actors" : [here put actor id]}'
+curl -v -X PUT http://localhost:8080/api/movies/here_put_movie_id/actors -H "Content-type: application/json" -d '{"actors" : [here put actor id]}'
 ```
 
 To assign category to movie curl
