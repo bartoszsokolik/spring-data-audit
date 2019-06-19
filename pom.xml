@@ -28,6 +28,9 @@
 		<maven.checkstyle.version>3.1.0</maven.checkstyle.version>
 		<maven.jacoco.version>0.8.4</maven.jacoco.version>
 		<checkstyle.config.location>${project.basedir}/src/main/resources/</checkstyle.config.location>
+		<docker.maven.plugin.version>0.30.0</docker.maven.plugin.version>
+		<build.helper.maven.plugin.version>3.0.0</build.helper.maven.plugin.version>
+		<maven.failsafe.plugin.version>3.0.0-M3</maven.failsafe.plugin.version>
 	</properties>
 
 	<dependencies>
@@ -100,6 +103,97 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-failsafe-plugin</artifactId>
+				<version>${maven.failsafe.plugin.version}</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>integration-test</goal>
+							<goal>verify</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
+				<version>${build.helper.maven.plugin.version}</version>
+				<executions>
+					<execution>
+						<id>add-test-source</id>
+						<phase>generate-test-sources</phase>
+						<goals>
+							<goal>add-test-source</goal>
+						</goals>
+						<configuration>
+							<sources>
+								<source>src/integration-test/java</source>
+							</sources>
+						</configuration>
+					</execution>
+					<execution>
+						<id>add-test-resource</id>
+						<phase>generate-test-resources</phase>
+						<goals>
+							<goal>add-test-resource</goal>
+						</goals>
+						<configuration>
+							<resources>
+								<resource>
+									<directory>src/integration-test/resources</directory>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>io.fabric8</groupId>
+				<artifactId>docker-maven-plugin</artifactId>
+				<version>${docker.maven.plugin.version}</version>
+				<executions>
+					<execution>
+						<id>prepare-it-database</id>
+						<goals>
+							<goal>start</goal>
+						</goals>
+						<configuration>
+							<showLogs>true</showLogs>
+							<images>
+								<image>
+									<name>postgres:latest</name>
+									<alias>it-database</alias>
+									<run>
+										<ports>
+											<port>5433:5432</port>
+										</ports>
+										<volumes>
+											<bind>
+												<volume>./init.sql:/docker-entrypoint-initdb.d/init.sql</volume>
+											</bind>
+										</volumes>
+										<wait>
+											<log>(?s)database system is ready to accept connections.*database system is ready to accept connections</log>
+											<time>10000</time>
+										</wait>
+									</run>
+								</image>
+							</images>
+						</configuration>
+					</execution>
+					<execution>
+						<id>remove-it-database</id>
+						<goals>
+							<goal>stop</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 
 			<plugin>

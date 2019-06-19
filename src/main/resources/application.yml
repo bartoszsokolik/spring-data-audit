@@ -2,6 +2,7 @@ spring:
   liquibase:
     change-log: classpath:db/config/db.changelog-master.xml
   datasource:
+    url: jdbc:postgresql://localhost:5432/filmstore?currentSchema=filmstore
     username: filmuser
     password: filmuser
   jpa:

@@ -1,4 +1,3 @@
-/*
 package pl.solutions.software.sokolik.bartosz.movie.domain;
 
 import org.junit.Test;
@@ -6,9 +5,8 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.AuditorAware;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
-import pl.solutions.software.sokolik.bartosz.movie.domain.Movie;
-import pl.solutions.software.sokolik.bartosz.movie.domain.MovieRepository;
 
 import java.util.List;
 
@@ -16,8 +14,9 @@ import static org.junit.Assert.assertEquals;
 import static pl.solutions.software.sokolik.bartosz.configuration.AuditingConstants.DEFAULT_AUDITOR;
 
 @RunWith(SpringRunner.class)
+@ActiveProfiles("it")
 @SpringBootTest
-public class AuditingSpringBootTest {
+public class AuditingSpringBootIT {
 
     @Autowired
     private AuditorAware<String> auditorAware;
@@ -38,8 +37,7 @@ public class AuditingSpringBootTest {
 
         List<Movie> movies = movieRepository.findAll();
         Movie result = movies.get(0);
-        assertEquals(DEFAULT_AUDITOR, result.getCreatedBy());
+        assertEquals(DEFAULT_AUDITOR, result.getCreatedBy().get());
     }
 
 }
-*/
