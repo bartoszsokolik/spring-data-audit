@@ -30,7 +30,11 @@
 		<checkstyle.config.location>${project.basedir}/src/main/resources/</checkstyle.config.location>
 		<docker.maven.plugin.version>0.30.0</docker.maven.plugin.version>
 		<build.helper.maven.plugin.version>3.0.0</build.helper.maven.plugin.version>
+		<maven.surefire.plugin.version>3.0.0-M3</maven.surefire.plugin.version>
 		<maven.failsafe.plugin.version>3.0.0-M3</maven.failsafe.plugin.version>
+		<skipUnitTests>false</skipUnitTests>
+		<skipITs>false</skipITs>
+		<skipDocker>false</skipDocker>
 	</properties>
 
 	<dependencies>
@@ -107,8 +111,20 @@
 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>${maven.surefire.plugin.version}</version>
+				<configuration>
+					<skipTests>${skipUnitTests}</skipTests>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-failsafe-plugin</artifactId>
 				<version>${maven.failsafe.plugin.version}</version>
+				<configuration>
+					<skipITs>${skipITs}</skipITs>
+				</configuration>
 				<executions>
 					<execution>
 						<goals>
@@ -164,6 +180,7 @@
 							<goal>start</goal>
 						</goals>
 						<configuration>
+							<skip>${skipDocker}</skip>
 							<showLogs>true</showLogs>
 							<images>
 								<image>
@@ -217,6 +234,34 @@
 				</executions>
 			</plugin>
 
+
+			<plugin>
+				<groupId>pl.project13.maven</groupId>
+				<artifactId>git-commit-id-plugin</artifactId>
+				<version>3.0.0</version>
+				<executions>
+					<execution>
+						<id>get-the-git-infos</id>
+						<goals>
+							<goal>revision</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<dotGitDirectory>${project.basedir}/.git</dotGitDirectory>
+					<prefix>git</prefix>
+					<verbose>true</verbose>
+					<generateGitPropertiesFile>true</generateGitPropertiesFile>
+					<generateGitPropertiesFilename>${project.build.outputDirectory}/git.properties</generateGitPropertiesFilename>
+					<format>json</format>
+					<gitDescribe>
+						<skip>false</skip>
+						<always>false</always>
+						<dirty>-dirty</dirty>
+					</gitDescribe>
+				</configuration>
+			</plugin>
+
 			<plugin>
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>
@@ -268,4 +313,14 @@
 		</plugins>
 	</build>
 
+	<profiles>
+		<profile>
+			<id>installation</id>
+			<properties>
+				<skipUnitTests>true</skipUnitTests>
+				<skipITs>true</skipITs>
+				<skipDocker>true</skipDocker>
+			</properties>
+		</profile>
+	</profiles>
 </project>
