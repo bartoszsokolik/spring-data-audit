@@ -15,7 +15,7 @@
 	<description>Demo project for Spring Boot</description>
 
 	<properties>
-		<java.version>1.8</java.version>
+		<java.version>11</java.version>
 		<hibernate.envers.version>5.4.2.Final</hibernate.envers.version>
 		<jaxb.api.version>2.3.1</jaxb.api.version>
 		<jaxb.runtime.version>2.3.2</jaxb.runtime.version>
@@ -232,6 +232,8 @@
 									<name>postgres:latest</name>
 									<alias>it-database</alias>
 									<run>
+										<namingStrategy>alias</namingStrategy>
+										<hostname>postgres</hostname>
 										<ports>
 											<port>${it-database-port}:5432</port>
 										</ports>
@@ -250,35 +252,43 @@
 						</configuration>
 					</execution>
 
-<!--					<execution>-->
-<!--						<id>start-it-container</id>-->
-<!--						<phase>pre-integration-test</phase>-->
-<!--						<goals>-->
-<!--							<goal>start</goal>-->
-<!--						</goals>-->
-<!--						<configuration>-->
-<!--							<dockerHost>${docker-host}</dockerHost>-->
-<!--							<imagePullPolicy>Never</imagePullPolicy>-->
-<!--							<images>-->
-<!--								<image>-->
-<!--									<alias>audit-app</alias>-->
-<!--									<name>audit-demo</name>-->
-<!--									<run>-->
-<!--										<links>id-database</links>-->
-<!--										<dependsOn>-->
-<!--											<container>it-database</container>-->
-<!--										</dependsOn>-->
-<!--										<port>8080:8080</port>-->
-<!--										<env>-->
-<!--											<APP_OPTS>&#45;&#45;spring.datasource.url=jdbc:postgresql://postgres:5432/filmstore?currentSchema=filmstore</APP_OPTS>-->
-<!--										</env>-->
-<!--										<entrypoint>./wait-for-it.sh -t 10 postgres:5432 &#45;&#45; /run.sh</entrypoint>-->
-<!--										<hostname>audit-app</hostname>-->
-<!--									</run>-->
-<!--								</image>-->
-<!--							</images>-->
-<!--						</configuration>-->
-<!--					</execution>-->
+					<execution>
+						<id>start-it-container</id>
+						<phase>pre-integration-test</phase>
+						<goals>
+							<goal>start</goal>
+						</goals>
+						<configuration>
+							<dockerHost>${docker-host}</dockerHost>
+							<imagePullPolicy>Never</imagePullPolicy>
+							<images>
+								<image>
+									<alias>audit-app</alias>
+									<name>audit-demo</name>
+									<run>
+										<links>
+											<link>it-database</link>
+										</links>
+										<dependsOn>
+											<container>it-database</container>
+										</dependsOn>
+										<ports>
+											<port>8080:8080</port>
+										</ports>
+										<env>
+											<APP_OPTS>--spring.datasource.url=jdbc:postgresql://it-database:5432/filmstore?currentSchema=filmstore</APP_OPTS>
+										</env>
+										<entrypoint>./wait-for-it.sh -t 10 postgres:5432 -- /run.sh</entrypoint>
+										<hostname>audit-app</hostname>
+										<wait>
+											<log>Started AuditingApplication in</log>
+											<time>36000</time>
+										</wait>
+									</run>
+								</image>
+							</images>
+						</configuration>
+					</execution>
 
 					<execution>
 						<id>stop-it-containers</id>
