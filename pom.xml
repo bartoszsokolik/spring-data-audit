@@ -32,9 +32,7 @@
 		<build.helper.maven.plugin.version>3.0.0</build.helper.maven.plugin.version>
 		<maven.surefire.plugin.version>3.0.0-M3</maven.surefire.plugin.version>
 		<maven.failsafe.plugin.version>3.0.0-M3</maven.failsafe.plugin.version>
-		<skipUnitTests>false</skipUnitTests>
-		<skipITs>false</skipITs>
-		<skipDocker>false</skipDocker>
+		<it-database-port>5432</it-database-port>
 	</properties>
 
 	<dependencies>
@@ -173,22 +171,71 @@
 				<groupId>io.fabric8</groupId>
 				<artifactId>docker-maven-plugin</artifactId>
 				<version>${docker.maven.plugin.version}</version>
+				<configuration>
+					<skip>${skipDocker}</skip>
+					<showLogs>false</showLogs>
+				</configuration>
 				<executions>
+
 					<execution>
-						<id>prepare-it-database</id>
+						<id>remove-old-it-image</id>
+						<phase>process-classes</phase>
+						<goals>
+							<goal>stop</goal>
+						</goals>
+						<configuration>
+							<dockerHost>${docker-host}</dockerHost>
+							<images>
+								<image>
+									<alias>it-database</alias>
+									<name>postgres:latest</name>
+								</image>
+							</images>
+						</configuration>
+					</execution>
+
+					<execution>
+						<id>prepare-app-image</id>
+						<phase>pre-integration-test</phase>
+						<goals>
+							<goal>build</goal>
+						</goals>
+						<configuration>
+							<dockerHost>${docker-host}</dockerHost>
+							<buildArgs>
+								<APP_VERSION>${project.version}</APP_VERSION>
+							</buildArgs>
+							<images>
+								<image>
+									<alias>audit-app</alias>
+									<name>audit-demo</name>
+									<build>
+										<dockerFileDir>${project.basedir}</dockerFileDir>
+										<tags>test</tags>
+									</build>
+								</image>
+							</images>
+						</configuration>
+					</execution>
+
+					<execution>
+						<id>start-it-database</id>
+						<phase>pre-integration-test</phase>
 						<goals>
 							<goal>start</goal>
 						</goals>
 						<configuration>
-							<skip>${skipDocker}</skip>
-							<showLogs>true</showLogs>
+							<dockerHost>${docker-host}</dockerHost>
+<!--							<imagePullPolicy>Never</imagePullPolicy>-->
 							<images>
 								<image>
 									<name>postgres:latest</name>
 									<alias>it-database</alias>
 									<run>
+										<namingStrategy>alias</namingStrategy>
+										<hostname>postgres</hostname>
 										<ports>
-											<port>5433:5432</port>
+											<port>${it-database-port}:5432</port>
 										</ports>
 										<volumes>
 											<bind>
@@ -204,8 +251,48 @@
 							</images>
 						</configuration>
 					</execution>
+
 					<execution>
-						<id>remove-it-database</id>
+						<id>start-it-container</id>
+						<phase>pre-integration-test</phase>
+						<goals>
+							<goal>start</goal>
+						</goals>
+						<configuration>
+							<dockerHost>${docker-host}</dockerHost>
+							<imagePullPolicy>Never</imagePullPolicy>
+							<images>
+								<image>
+									<alias>audit-app</alias>
+									<name>audit-demo</name>
+									<run>
+										<links>
+											<link>it-database</link>
+										</links>
+										<dependsOn>
+											<container>it-database</container>
+										</dependsOn>
+										<ports>
+											<port>8080:8080</port>
+										</ports>
+										<env>
+											<APP_OPTS>--spring.datasource.url=jdbc:postgresql://it-database:5432/filmstore?currentSchema=filmstore</APP_OPTS>
+										</env>
+										<entrypoint>./wait-for-it.sh -t 10 postgres:5432 -- /run.sh</entrypoint>
+										<hostname>audit-app</hostname>
+										<wait>
+											<log>Started AuditingApplication in</log>
+											<time>36000</time>
+										</wait>
+									</run>
+								</image>
+							</images>
+						</configuration>
+					</execution>
+
+					<execution>
+						<id>stop-it-containers</id>
+						<phase>post-integration-test</phase>
 						<goals>
 							<goal>stop</goal>
 						</goals>
@@ -233,7 +320,6 @@
 					</execution>
 				</executions>
 			</plugin>
-
 
 			<plugin>
 				<groupId>pl.project13.maven</groupId>
@@ -320,6 +406,31 @@
 				<skipUnitTests>true</skipUnitTests>
 				<skipITs>true</skipITs>
 				<skipDocker>true</skipDocker>
+			</properties>
+		</profile>
+
+		<profile>
+			<id>windows</id>
+			<activation>
+				<os>
+					<family>windows</family>
+				</os>
+			</activation>
+			<properties>
+				<docker-host>tcp://localhost:2375</docker-host>
+			</properties>
+		</profile>
+
+		<profile>
+			<id>unix</id>
+			<activation>
+				<os>
+					<family>unix</family>
+					<name>Linux</name>
+				</os>
+			</activation>
+			<properties>
+				<docker-host>unix:///var/run/docker.sock</docker-host>
 			</properties>
 		</profile>
 	</profiles>

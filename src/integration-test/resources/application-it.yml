@@ -1,5 +1,5 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5433/filmstore?currentSchema=filmstore
+    url: jdbc:postgresql://localhost:5432/filmstore?currentSchema=filmstore
     username: filmuser
     password: filmuser
