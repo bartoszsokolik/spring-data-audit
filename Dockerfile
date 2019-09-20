@@ -1,14 +1,15 @@
-FROM maven:3.6.2 as builder
-
-WORKDIR /workspace
-COPY . .
-RUN mvn clean install -P installation && \
-mkdir output && \
-cp ./target/application.jar output/application.jar
+#FROM maven:3.6.2 as builder
+#
+#WORKDIR /workspace
+#COPY . .
+#RUN mvn clean install -P installation && \
+#mkdir output && \
+#cp ./target/application.jar output/application.jar
 
 FROM openjdk:11-jre-slim
-COPY --from=builder /workspace/output/* ./
-#ADD /target/application.jar application.jar
+#COPY --from=builder /workspace/output/* ./
+##Remove when using builder
+ADD /target/application.jar application.jar
 
 ADD run.sh /run.sh
 RUN chmod +x /run.sh
