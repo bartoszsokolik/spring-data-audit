@@ -6,6 +6,7 @@ spring:
     username: filmuser
     password: filmuser
   jpa:
+    show-sql: true
     hibernate:
       ddl-auto: validate
     properties:

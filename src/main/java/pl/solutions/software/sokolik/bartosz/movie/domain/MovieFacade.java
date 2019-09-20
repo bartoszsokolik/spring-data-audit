@@ -10,6 +10,7 @@ import pl.solutions.software.sokolik.bartosz.movie.domain.dto.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import pl.solutions.software.sokolik.bartosz.movie.domain.exception.MovieNotFoundException;
 
 @Service
 @RequiredArgsConstructor
@@ -29,10 +30,15 @@ public class MovieFacade {
         return new MovieListDto(movies);
     }
 
+    public MovieDto findByTitle(String title) {
+        return movieRepository.findByTitle(title)
+            .map(movieAssembler::fromDomain)
+            .orElseThrow(() -> new MovieNotFoundException("Movie with given title not found"));
+    }
+
     @Transactional
     public MovieDto findById(Long id) {
-        Movie movie = movieRepository.findById(id).orElseThrow(RuntimeException::new);
-        return movieAssembler.fromDomain(movie);
+        return movieAssembler.fromDomain(fetchMovieById(id));
     }
 
     @Transactional
@@ -60,7 +66,7 @@ public class MovieFacade {
         movie.getCategories().add(category);
     }
 
-    public Movie fetchMovieById(Long id) {
+    private Movie fetchMovieById(Long id) {
         return movieRepository.findById(id).orElseThrow(() -> new MovieNotFoundException("Movie with given id not found"));
     }
 

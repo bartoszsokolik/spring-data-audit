@@ -25,6 +25,11 @@ class MovieController {
         return new ResponseEntity<>(movieFacade.findById(id), HttpStatus.OK);
     }
 
+    @GetMapping("/title/{title}")
+    ResponseEntity<MovieDto> findByTitle(@PathVariable String title) {
+        return new ResponseEntity<>(movieFacade.findByTitle(title), HttpStatus.OK);
+    }
+
     @GetMapping
     ResponseEntity<MovieListDto> findAll() {
         return new ResponseEntity<>(movieFacade.findAll(), HttpStatus.OK);
