@@ -248,7 +248,8 @@
                   <alias>audit-app</alias>
                   <name>audit-demo</name>
                   <build>
-                    <dockerFileDir>${project.basedir}</dockerFileDir>
+                    <contextDir>${project.basedir}</contextDir>
+                    <dockerFile>${project.basedir}/docker/test/Dockerfile</dockerFile>
                     <tags>test</tags>
                   </build>
                 </image>
@@ -277,7 +278,7 @@
                     </ports>
                     <volumes>
                       <bind>
-                        <volume>./init.sql:/docker-entrypoint-initdb.d/init.sql</volume>
+                        <volume>./docker/init.sql:/docker-entrypoint-initdb.d/init.sql</volume>
                       </bind>
                     </volumes>
                     <wait>
@@ -318,7 +319,7 @@
                         --spring.datasource.url=jdbc:postgresql://it-database:5432/filmstore?currentSchema=filmstore --spring.profiles.active=it
                       </APP_OPTS>
                     </env>
-                    <entrypoint>./wait-for-it.sh -t 10 postgres:5432 -- /run.sh</entrypoint>
+                    <entrypoint>./wait-for-it.sh -t 10 it-database:5432 -- /run.sh</entrypoint>
                     <hostname>audit-app</hostname>
                     <wait>
                       <log>Started AuditingApplication in</log>
