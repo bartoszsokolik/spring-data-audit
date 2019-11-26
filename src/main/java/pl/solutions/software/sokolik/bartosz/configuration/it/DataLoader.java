@@ -1,4 +1,4 @@
-package pl.solutions.software.sokolik.bartosz.configuration;
+package pl.solutions.software.sokolik.bartosz.configuration.it;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;

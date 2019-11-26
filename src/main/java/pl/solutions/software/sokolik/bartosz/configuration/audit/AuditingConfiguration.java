@@ -1,4 +1,4 @@
-package pl.solutions.software.sokolik.bartosz.configuration;
+package pl.solutions.software.sokolik.bartosz.configuration.audit;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
