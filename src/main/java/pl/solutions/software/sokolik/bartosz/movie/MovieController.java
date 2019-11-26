@@ -1,17 +1,25 @@
 package pl.solutions.software.sokolik.bartosz.movie;
 
+import static org.springframework.http.HttpStatus.OK;
+
+import java.net.URI;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import pl.solutions.software.sokolik.bartosz.movie.domain.MovieFacade;
 import pl.solutions.software.sokolik.bartosz.movie.domain.dto.AddCategoryRequest;
 import pl.solutions.software.sokolik.bartosz.movie.domain.dto.AssignMovieRequest;
 import pl.solutions.software.sokolik.bartosz.movie.domain.dto.MovieDto;
 import pl.solutions.software.sokolik.bartosz.movie.domain.dto.MovieListDto;
-
-import java.net.URI;
+import pl.solutions.software.sokolik.bartosz.paging.CustomPageRequest;
+import pl.solutions.software.sokolik.bartosz.paging.PagedResponse;
 
 @RestController
 @RequestMapping("/api/movies")
@@ -22,17 +30,22 @@ class MovieController {
 
     @GetMapping("/{id}")
     ResponseEntity<MovieDto> findOne(@PathVariable Long id) {
-        return new ResponseEntity<>(movieFacade.findById(id), HttpStatus.OK);
+        return new ResponseEntity<>(movieFacade.findById(id), OK);
     }
 
     @GetMapping("/title/{title}")
     ResponseEntity<MovieDto> findByTitle(@PathVariable String title) {
-        return new ResponseEntity<>(movieFacade.findByTitle(title), HttpStatus.OK);
+        return new ResponseEntity<>(movieFacade.findByTitle(title), OK);
     }
 
     @GetMapping
     ResponseEntity<MovieListDto> findAll() {
-        return new ResponseEntity<>(movieFacade.findAll(), HttpStatus.OK);
+        return new ResponseEntity<>(movieFacade.findAll(), OK);
+    }
+
+    @GetMapping("/paged")
+    ResponseEntity<PagedResponse<MovieDto>> paged(CustomPageRequest pageRequest) {
+        return new ResponseEntity<>(movieFacade.getMoviesPaged(pageRequest), OK);
     }
 
     @PostMapping
@@ -49,19 +62,19 @@ class MovieController {
     @PutMapping("/{id}")
     ResponseEntity<Void> updateMovie(@PathVariable Long id, @RequestBody MovieDto dto) {
         movieFacade.updateMovie(id, dto);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(OK);
     }
 
     @PutMapping("/{id}/actors")
     ResponseEntity<Void> assignActorsToMovie(@PathVariable Long id, @RequestBody AssignMovieRequest dto) {
         movieFacade.assignActorsToMovie(id, dto);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(OK);
     }
 
     @PutMapping("/category")
     ResponseEntity<Void> addCategoryToMovie(@RequestBody AddCategoryRequest dto) {
         movieFacade.addCategoryToMovie(dto);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(OK);
     }
 
 }
