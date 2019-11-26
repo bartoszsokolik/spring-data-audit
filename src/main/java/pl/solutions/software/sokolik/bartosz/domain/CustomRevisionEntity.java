@@ -3,6 +3,7 @@ package pl.solutions.software.sokolik.bartosz.domain;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.envers.RevisionEntity;
 import org.hibernate.envers.RevisionNumber;
 import org.hibernate.envers.RevisionTimestamp;
@@ -10,7 +11,8 @@ import org.hibernate.envers.RevisionTimestamp;
 import javax.persistence.*;
 
 @Getter
-@RevisionEntity
+@Setter
+@RevisionEntity(CustomRevisionListener.class)
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -27,4 +29,7 @@ public class CustomRevisionEntity {
     @Column(name = "revtstmp")
     @RevisionTimestamp
     private Long revisionTimestamp;
+
+    @Column(name = "username")
+    private String username;
 }

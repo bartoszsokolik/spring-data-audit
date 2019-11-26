@@ -13,7 +13,7 @@ import pl.solutions.software.sokolik.bartosz.config.TestAuditingConfiguration;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
-import static pl.solutions.software.sokolik.bartosz.configuration.AuditingConstants.TEST_AUDITOR;
+import static pl.solutions.software.sokolik.bartosz.configuration.audit.AuditingConstants.TEST_AUDITOR;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest

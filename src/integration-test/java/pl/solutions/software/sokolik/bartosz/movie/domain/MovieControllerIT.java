@@ -9,6 +9,7 @@ import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import pl.solutions.software.sokolik.bartosz.movie.util.OauthTokenResponse;
 
 @RunWith(JUnitParamsRunner.class)
 public class MovieControllerIT {
@@ -16,7 +17,11 @@ public class MovieControllerIT {
   @Test
   @Parameters
   public void shouldReturnMovieWithGivenId(String title) {
+    OauthTokenResponse oauthResponse = OauthTokenResponse.getOauthToken();
+
     RestAssured.given()
+        .auth()
+        .oauth2(oauthResponse.getAccessToken())
         .when()
         .get("http://localhost:8080/api/movies/title/" + title)
         .then()
@@ -26,7 +31,11 @@ public class MovieControllerIT {
 
   @Test
   public void testFindAllMovies() {
+    OauthTokenResponse oauthResponse = OauthTokenResponse.getOauthToken();
+
     RestAssured.given()
+        .auth()
+        .oauth2(oauthResponse.getAccessToken())
         .when()
         .get("http://localhost:8080/api/movies")
         .then()

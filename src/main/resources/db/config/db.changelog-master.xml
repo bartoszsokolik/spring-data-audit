@@ -95,6 +95,7 @@
         <constraints primaryKey="true"/>
       </column>
       <column name="revtstmp" type="BIGINT"/>
+      <column name="username" type="VARCHAR(255)"/>
     </createTable>
 
     <addForeignKeyConstraint baseTableName="movies_aud" baseColumnNames="rev"
@@ -180,6 +181,10 @@
       constraintName="fk1_categories_aud"
       referencedTableName="revinfo"
       referencedColumnNames="rev"/>
+  </changeSet>
+
+  <changeSet id="002_create_oauth_tables" author="bsokolik">
+    <sqlFile path="sql/oauth.sql" relativeToChangelogFile="true"/>
   </changeSet>
 
 </databaseChangeLog>
