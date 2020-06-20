@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import pl.solutions.software.sokolik.bartosz.movie.domain.MovieFacade;
@@ -20,6 +21,7 @@ import pl.solutions.software.sokolik.bartosz.movie.domain.dto.MovieDto;
 import pl.solutions.software.sokolik.bartosz.movie.domain.dto.MovieListDto;
 import pl.solutions.software.sokolik.bartosz.paging.CustomPageRequest;
 import pl.solutions.software.sokolik.bartosz.paging.PagedResponse;
+import pl.solutions.software.sokolik.bartosz.paging.SortDirection;
 
 @RestController
 @RequestMapping("/api/movies")
@@ -46,6 +48,14 @@ class MovieController {
     @GetMapping("/paged")
     ResponseEntity<PagedResponse<MovieDto>> paged(CustomPageRequest pageRequest) {
         return new ResponseEntity<>(movieFacade.getMoviesPaged(pageRequest), OK);
+    }
+
+    @GetMapping("/all/paged")
+    ResponseEntity<PagedResponse<MovieDto>> getAllPages(@RequestParam(required = false, defaultValue = "1") int page,
+                                                        @RequestParam(required = false, defaultValue = "10") int size,
+                                                        @RequestParam(name = "sort_by", required = false, defaultValue = "id") String sortBy,
+                                                        @RequestParam(name = "sort_how", required = false, defaultValue = "desc") SortDirection sortDirection) {
+        return new ResponseEntity<>(movieFacade.getMoviesPaged(new CustomPageRequest(page, size, sortDirection, sortBy)), OK);
     }
 
     @PostMapping

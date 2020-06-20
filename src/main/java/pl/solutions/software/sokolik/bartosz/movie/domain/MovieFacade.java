@@ -37,10 +37,7 @@ public class MovieFacade {
   }
 
   public PagedResponse<MovieDto> getMoviesPaged(CustomPageRequest customPageRequest) {
-    PageRequest pageRequest = PageRequest.of(customPageRequest.getPage(),
-        customPageRequest.getSize(), customPageRequest.getOrder(), customPageRequest.getSortBy());
-
-    Page<MovieDto> page = movieRepository.findAll(pageRequest).map(movieAssembler::fromDomain);
+    Page<MovieDto> page = movieRepository.findAll(customPageRequest.toPageable()).map(movieAssembler::fromDomain);
     return new PagedResponse<>(page);
   }
 
